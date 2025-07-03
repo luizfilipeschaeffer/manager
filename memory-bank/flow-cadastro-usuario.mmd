@@ -1,9 +1,16 @@
 flowchart TD
-    U1["Admin cliente acessa painel de usuários"]
-    U2["Clica em 'Novo Usuário'"]
-    U3["Preenche dados e permissões"]
-    U4["(Opcional) Envia convite por e-mail"]
-    U5["Usuário recebe convite e ativa conta"]
-    U6["Admin pode ativar/desativar usuário"]
-    U1 --> U2 --> U3 --> U4 --> U5
-    U1 --> U6 
+    S1["Usuário acessa cadastro"]
+    S2{"É uso empresarial?"}
+    S3["Fluxo empresarial: admin cliente acessa painel de usuários"]
+    S4["Fluxo pessoal: usuário cria conta e usa direto"]
+    S5["Cadastra/edita filial (nome, endereço, etc.)"]
+    S6["Cadastra usuário, permissões e filial"]
+    S7["(Opcional) Envia convite por e-mail"]
+    S8["Usuário recebe convite e ativa conta"]
+    S9["Admin pode ativar/desativar usuário"]
+    S3 --> S5
+    S3 --> S6 --> S7 --> S8
+    S3 --> S9
+    S1 --> S2
+    S2 -- Sim --> S3
+    S2 -- Não --> S4 

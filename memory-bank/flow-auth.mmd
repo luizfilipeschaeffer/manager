@@ -2,9 +2,13 @@ flowchart TD
     A1["Usuário acessa página de login"]
     A2["Envia credenciais"]
     A3["Valida credenciais e gera JWT"]
-    A4["JWT inclui sub, cliente_id, role"]
-    A5["Middleware valida JWT em cada request"]
-    A6["Injeta contexto (usuário, cliente, permissões)"]
-    A7["Permite ou bloqueia acesso à rota/módulo"]
+    A4{"É uso empresarial?"}
+    A5["JWT inclui sub, cliente_id, filial_id, role"]
+    A6["JWT inclui sub, role (cliente_id/filial_id = próprio id)"]
+    A7["Middleware valida JWT em cada request"]
+    A8["Injeta contexto (usuário, cliente, filial, permissões)"]
+    A9["Injeta contexto (usuário pessoal, permissões)"]
+    A10["Permite ou bloqueia acesso à rota/módulo"]
     A1 --> A2 --> A3 --> A4
-    A4 --> A5 --> A6 --> A7 
+    A4 -- Sim --> A5 --> A7 --> A8 --> A10
+    A4 -- Não --> A6 --> A7 --> A9 --> A10 

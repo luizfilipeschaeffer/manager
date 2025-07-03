@@ -1,10 +1,16 @@
 flowchart TD
     F1["Usuário acessa módulo Fornecedores"]
-    F2["Clica em 'Novo Fornecedor'"]
-    F3["Preenche dados do fornecedor"]
-    F4["Validação dos dados (Zod)"]
-    F5["Salva fornecedor (cliente_id incluído)"]
-    F6["Gera log/auditoria da ação"]
-    F7["(Opcional) Dispara notificação"]
-    F2 --> F3 --> F4 --> F5 --> F6
-    F5 --> F7 
+    F2{"É uso empresarial?"}
+    F3["Clica em 'Novo Fornecedor'"]
+    F4["Preenche dados do fornecedor e seleciona filial"]
+    F5["Preenche dados do fornecedor (associado ao próprio usuário)"]
+    F6["Validação dos dados (Zod)"]
+    F7["Salva fornecedor (cliente_id e filial_id incluídos)"]
+    F8["Salva fornecedor (cliente_id = usuário)"]
+    F9["Gera log/auditoria da ação"]
+    F10["(Opcional) Dispara notificação"]
+    F1 --> F2
+    F2 -- Sim --> F3 --> F4 --> F6 --> F7 --> F9
+    F7 --> F10
+    F2 -- Não --> F3 --> F5 --> F6 --> F8 --> F9
+    F8 --> F10 
