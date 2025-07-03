@@ -1,0 +1,8 @@
+flowchart TD
+    L1["Ação relevante ocorre (ex: cadastro, edição)"]
+    L2["Gera registro na tabela logs_auditoria"]
+    L3["Admin acessa painel de auditoria"]
+    L4["Filtra e consulta logs"]
+    L5["(Opcional) Exporta logs"]
+    L1 --> L2
+    L3 --> L4 --> L5 

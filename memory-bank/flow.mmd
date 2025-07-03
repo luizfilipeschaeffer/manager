@@ -1,0 +1,34 @@
+flowchart TD
+    subgraph "Fluxo Admin Plataforma"
+        A1["Acessa painel /admin"]
+        A2["Cria novo cliente (nome, CNPJ, email, plano, módulos, limites)"]
+        A3["Gera admin master para o cliente"]
+        A4["Envia e-mail com link de acesso"]
+        A5["Visualiza uso por cliente/módulo"]
+        A6["Habilita/desabilita módulos conforme plano"]
+        A7["Ajusta limites de uso"]
+        A8["Analisa logs/auditoria/métricas"]
+        A9["Gera relatórios por tenant"]
+        A10["Adiciona novos módulos em /modules/"]
+        A11["Adiciona novas integrações em /integrations/"]
+        A12["Ajusta planos via painel admin"]
+        A1 --> A2 --> A3 --> A4
+        A5 --> A6 --> A7 --> A8 --> A9
+        A10 --> A6
+        A11 --> A7
+        A12 --> A6
+    end
+
+    subgraph "Fluxo Tenant (Cliente)"
+        B1["Admin cliente faz login"]
+        B2["Cria usuários, setores, permissões"]
+        B3["Conecta integrações externas (opcional)"]
+        B4["Navega pelos módulos habilitados"]
+        B5["Realiza ações (ex: cadastrar fornecedor, gerar pedido)"]
+        B6["Dados isolados por cliente_id"]
+        B7["Logs e métricas gerados em segundo plano"]
+        B8["Middleware impede acesso a módulos desabilitados"]
+        B1 --> B2 --> B3 --> B4 --> B5 --> B6
+        B5 --> B7
+        B4 --> B8
+    end 

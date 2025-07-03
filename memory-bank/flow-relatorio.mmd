@@ -1,0 +1,10 @@
+flowchart TD
+    R1["Admin acessa painel de relatórios"]
+    R2["Seleciona filtros (cliente, módulo, período)"]
+    R3["Gera relatório (consulta filtrada)"]
+    R4["Exibe relatório na tela"]
+    R5["(Opcional) Exporta relatório (PDF/CSV)"]
+    R6["Gera log de acesso ao relatório"]
+    R1 --> R2 --> R3 --> R4
+    R4 --> R5
+    R3 --> R6 

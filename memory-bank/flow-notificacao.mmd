@@ -1,0 +1,6 @@
+flowchart TD
+    N1["Ação relevante ocorre (ex: novo pedido)"]
+    N2["Dispara notificação interna (toast)"]
+    N3["(Opcional) Dispara notificação externa (email/webhook)"]
+    N4["Registra status da notificação"]
+    N1 --> N2 --> N3 --> N4 

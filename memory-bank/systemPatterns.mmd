@@ -1,0 +1,85 @@
+flowchart TD
+    subgraph "Frontend/Backend (Next.js)"
+        APP["app/ (Páginas e rotas)"]
+        MODULES["modules/ (Módulos ativáveis)"]
+        LIB["lib/ (Utilitários)"]
+        MIDDLEWARE["middleware.ts (Tenant, módulos, auth)"]
+        AUTH["auth/ (JWT, login, helpers)"]
+        TYPES["types/ (Tipagens globais)"]
+    end
+
+    subgraph "Módulo Exemplo (CRM)"
+        CRM_CONTROLLERS["controllers/"]
+        CRM_USECASES["usecases/"]
+        CRM_REPOS["repositories/"]
+        CRM_TYPES["types/"]
+    end
+
+    subgraph "Camadas Globais"
+        SERVICES["services/ (Integrações externas)"]
+        REPOS["repositories/ (Globais)"]
+        USECASES["usecases/ (Globais)"]
+        CONTROLLERS["controllers/ (Globais)"]
+        LOGS["logs/ (Auditoria)"]
+        EVENTS["events/ (Eventos)"]
+        NOTIFS["notifications/ (Notificações)"]
+        METRICS["metrics/ (Métricas)"]
+    end
+
+    subgraph "Banco de Dados (PostgreSQL + Prisma)"
+        CLIENTES["clientes"]
+        CLIENTE_MODULOS["cliente_modulos"]
+        USUARIOS["usuarios"]
+        TABELAS["fornecedores, produtos, pedidos, ..."]
+        LOGS_AUD["logs_auditoria"]
+        NOTIFICACOES["notificacoes"]
+        METRICAS["metricas_modulo"]
+    end
+
+    APP --> MIDDLEWARE
+    APP --> MODULES
+    MODULES --> CRM_CONTROLLERS
+    MODULES --> CRM_USECASES
+    MODULES --> CRM_REPOS
+    MODULES --> CRM_TYPES
+    MIDDLEWARE --> AUTH
+    MIDDLEWARE --> TYPES
+    CRM_CONTROLLERS --> SERVICES
+    CRM_USECASES --> SERVICES
+    CRM_REPOS --> SERVICES
+    SERVICES --> CLIENTES
+    SERVICES --> CLIENTE_MODULOS
+    SERVICES --> USUARIOS
+    SERVICES --> TABELAS
+    LOGS --> LOGS_AUD
+    NOTIFS --> NOTIFICACOES
+    METRICS --> METRICAS
+    EVENTS --> SERVICES
+    CONTROLLERS --> USECASES
+    USECASES --> REPOS
+    REPOS --> SERVICES
+    MIDDLEWARE --> LOGS
+    MIDDLEWARE --> EVENTS
+    MIDDLEWARE --> NOTIFS
+    MIDDLEWARE --> METRICS
+    CRM_CONTROLLERS --> LOGS
+    CRM_USECASES --> EVENTS
+    CRM_USECASES --> METRICS
+    CRM_USECASES --> NOTIFS
+    CRM_REPOS --> REPOS
+    AUTH --> USUARIOS
+    TYPES --> APP
+    TYPES --> MODULES
+    TYPES --> SERVICES
+    TYPES --> CONTROLLERS
+    TYPES --> LOGS
+    TYPES --> EVENTS
+    TYPES --> NOTIFS
+    TYPES --> METRICS
+    TYPES --> CLIENTES
+    TYPES --> CLIENTE_MODULOS
+    TYPES --> USUARIOS
+    TYPES --> TABELAS
+    TYPES --> LOGS_AUD
+    TYPES --> NOTIFICACOES
+    TYPES --> METRICAS 

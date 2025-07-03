@@ -1,0 +1,29 @@
+# Regras globais
+
+## Estrutura e Organização
+- Siga a arquitetura modular e multi-tenant documentada na memory-bank.
+- Cada módulo em /modules deve conter controllers, usecases, repositories e types próprios.
+- Utilize tabela relacional (cliente_modulos) para controle de módulos habilitados por cliente.
+- Todas as tabelas devem conter cliente_id para isolamento de dados.
+
+## Autenticação e Autorização
+- JWT deve conter claims customizadas: sub (id do usuário), cliente_id, role.
+- Middleware global deve validar token, injetar contexto do usuário/cliente e bloquear acesso a módulos não habilitados.
+- Sempre filtre dados por cliente_id em queries e mutations.
+
+## Camadas Extras
+- Implemente logs/auditoria para rastrear ações relevantes por usuário/cliente.
+- Utilize eventos (EventEmitter ou similar) para acoplar ações secundárias sem impactar o fluxo principal.
+- Notificações e métricas devem ser implementadas conforme crescimento do sistema.
+
+## Padrões de Código
+- Use TypeScript em todo o projeto.
+- Valide dados com Zod.
+- Utilize TailwindCSS para estilização da UI.
+- Separe responsabilidades: controllers (entrada), usecases (negócio), repositories (banco).
+- Prefira funções puras e reutilizáveis em /lib.
+
+## Documentação e Manutenção
+- Mantenha a memory-bank sempre atualizada após decisões importantes ou mudanças de arquitetura.
+- Atualize este arquivo (.cursorrules) sempre que um novo padrão, preferência ou regra de projeto for estabelecido.
+- Consulte a memory-bank para contexto, padrões e decisões antes de iniciar novas features. 
