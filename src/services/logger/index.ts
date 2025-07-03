@@ -28,7 +28,6 @@ export function log(level: LogLevel, action: string, data?: unknown, userId?: st
   // Exemplo: await prisma.log.create({ data: entry })
   if (process.env.NODE_ENV !== 'production') {
     // Log no console para debug
-    // eslint-disable-next-line no-console
     console.log(`[${entry.timestamp.toISOString()}] [${level}] [${action}]`, { userId, clienteId, data });
   }
 }

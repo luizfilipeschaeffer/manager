@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
-
-// Mock banco de dados em memória
-const clients: { id: string; nome: string; modulos: string[] }[] = [];
+import { prisma } from '@/core/prisma';
 
 // Middleware simples para simular proteção JWT (substituir pelo middleware real depois)
 function requireAuth(req: NextRequest) {
@@ -18,44 +15,68 @@ export async function GET(req: NextRequest) {
   if (!requireAuth(req)) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
-  return NextResponse.json(clients);
+  // Busca todos os clientes e módulos habilitados
+  const clients = await prisma.client.findMany({
+    include: {
+      modules: {
+        include: {
+          module: true,
+        },
+      },
+    },
+  });
+  // Formata resposta para incluir lista de módulos
+  const result = clients.map(c => ({
+    id: c.id,
+    nome: c.name,
+    email: c.email,
+    modulos: c.modules.map(m => m.module.name),
+  }));
+  return NextResponse.json(result);
 }
 
 export async function POST(req: NextRequest) {
   if (!requireAuth(req)) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
-  const { nome, modulos } = await req.json();
-  if (!nome) {
-    return NextResponse.json({ error: 'Nome obrigatório' }, { status: 400 });
+  const { nome, email, modulos } = await req.json();
+  if (!nome || !email) {
+    return NextResponse.json({ error: 'Nome e email obrigatórios' }, { status: 400 });
   }
-  const novo = { id: uuidv4(), nome, modulos: modulos || [] };
-  clients.push(novo);
-  return NextResponse.json(novo, { status: 201 });
+  // Cria cliente
+  const client = await prisma.client.create({
+    data: {
+      name: nome,
+      email,
+      modules: {
+        create: (modulos || []).map((moduloName: string) => ({
+          module: {
+            connectOrCreate: {
+              where: { name: moduloName },
+              create: { name: moduloName },
+            },
+          },
+        })),
+      },
+    },
+    include: {
+      modules: {
+        include: { module: true },
+      },
+    },
+  });
+  return NextResponse.json({
+    id: client.id,
+    nome: client.name,
+    email: client.email,
+    modulos: client.modules.map(m => m.module.name),
+  }, { status: 201 });
 }
 
 export async function PUT(req: NextRequest) {
-  if (!requireAuth(req)) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
-  const { id, nome, modulos } = await req.json();
-  const idx = clients.findIndex(c => c.id === id);
-  if (idx === -1) {
-    return NextResponse.json({ error: 'Cliente não encontrado' }, { status: 404 });
-  }
-  clients[idx] = { ...clients[idx], nome: nome || clients[idx].nome, modulos: modulos || clients[idx].modulos };
-  return NextResponse.json(clients[idx]);
+  return NextResponse.json({ error: 'Não implementado com Prisma ainda' }, { status: 501 });
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!requireAuth(req)) {
-    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
-  }
-  const { id } = await req.json();
-  const idx = clients.findIndex(c => c.id === id);
-  if (idx === -1) {
-    return NextResponse.json({ error: 'Cliente não encontrado' }, { status: 404 });
-  }
-  const excluido = clients.splice(idx, 1)[0];
-  return NextResponse.json(excluido);
+  return NextResponse.json({ error: 'Não implementado com Prisma ainda' }, { status: 501 });
 } 

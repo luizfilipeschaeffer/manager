@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id          String         @id @default(uuid())
+  name        String
+  email       String         @unique
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  users       User[]
+  modules     ClientModule[]
+  logs        Log[]
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  name        String
+  password    String
+  role        Role
+  clientId    String
+  client      Client    @relation(fields: [clientId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  logs        Log[]
+}
+
+enum Role {
+  ADMIN
+  GERENTE
+  COMUM
+}
+
+model Module {
+  id          String         @id @default(uuid())
+  name        String         @unique
+  description String?
+  clients     ClientModule[]
+}
+
+model ClientModule {
+  id        String   @id @default(uuid())
+  client   Client   @relation(fields: [clientId], references: [id])
+  clientId String
+  module   Module   @relation(fields: [moduleId], references: [id])
+  moduleId String
+  enabled  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  @@unique([clientId, moduleId])
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  message   String?
+  createdAt DateTime @default(now())
+}
